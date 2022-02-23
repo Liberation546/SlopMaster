@@ -2,8 +2,12 @@ package chicky;
 
 import java.io.File;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message.MentionType;
@@ -33,6 +37,8 @@ public class Commands extends ListenerAdapter {
 	
 	public String[] gifPathArray = {"C:/Users/mmmmm/Desktop/chicken/acorn.gif",
 			"C:/Users/mmmmm/Desktop/chicken/dance.gif"};
+	
+	public String[] adminIDs = {"695688150466428989", "530269428185825290", "508100678758170644", "267030980210982923", "939905297240178769", "256920677385371649", "944587799888285737", "936468736532172800"};
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -70,7 +76,7 @@ public class Commands extends ListenerAdapter {
 					+ "\nc$soyanthony shows a picture of anthony"
 					+ "\ngoodnight goodnight :)"
 					+ "\nc$kys You should kill yourself... now"
-					+ "\ncomputer_show_me_hell will show you hell, be sure to thank computer" 
+					+ "\ncomputer show me hell will show you hell, be sure to thank computer" 
 					+ "\n(ADMIN ONLY) c$gotohell {@userID} bans a user for one day"
 					+ "\n(ADMIN ONLY) c$silence {@userID} mutes a user indefinitely"
 					+ "\n(ADMIN ONLY) c$unsilence {@userID} unmutes user")).queue();
@@ -116,7 +122,7 @@ public class Commands extends ListenerAdapter {
 		if(args[0].equalsIgnoreCase(prefix + "lean")) {
 			event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/carnage.mp4")).queue();
 		}
-		if(args[0].equalsIgnoreCase("computer_show_me_hell")) {
+		if(args[0].equalsIgnoreCase("computer") && args[1].equalsIgnoreCase("show") && args[2].equalsIgnoreCase("me") && args[3].equalsIgnoreCase("hell")) {
 			File f = new File("C:/Users/mmmmm/Desktop/botgifs/skeleton-burning.gif");
 			EmbedBuilder embed = new EmbedBuilder();
 			
@@ -230,6 +236,52 @@ public class Commands extends ListenerAdapter {
 				User user = member.getUser();
 				for(int i = 0; i < 15; i++) {
 					user.openPrivateChannel().queue(channel -> channel.sendMessage("FUCK YOU FUCK YOU FUCK YOU").queue());
+				}
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("jango")) {
+				i = args.length;
+				final String emoteId = "felixsupremacy:944033771836022844";
+				event.getMessage().addReaction(emoteId).queue();
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("gort") || args[i].equalsIgnoreCase("snoy")) {
+				i = args.length;
+				final String emoteId = "snoy:944401062234816542";
+				event.getMessage().addReaction(emoteId).queue();
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("tuesday")) {
+				i = args.length;
+				event.getChannel().sendMessage("Tuesday? Am I so out of touch? https://www.youtube.com/watch?v=D00M2KZH1J0").queue();
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[0].equalsIgnoreCase("league") && args[1].equalsIgnoreCase("of") && args[2].equalsIgnoreCase("legends")) {
+				i = args.length;
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
+			}
+		}
+		boolean isAdmin = false;
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equals("genshin")) {
+				for(int j = 0; j < adminIDs.length; j++) {
+					if(event.getAuthor().getId().equals(adminIDs[j])) {
+						isAdmin = true;
+					}
+				}
+				if(!isAdmin) {
+					event.getChannel().sendMessage("MUTED AHAHAHAHAHAHA").queue();
+					event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("932112631546916884")).queue();
+				} else {
+					break;
 				}
 			}
 		}
