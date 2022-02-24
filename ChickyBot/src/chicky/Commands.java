@@ -1,28 +1,21 @@
 package chicky;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.RestAction;
 
 
 
@@ -31,6 +24,7 @@ public class Commands extends ListenerAdapter {
 	public String prefix = "c$";
 	public int joeCount = 0;
 	public int maximumJoe = 100;
+	public File f = new File("log.txt");
 	public String[] pathArray = {"C:/Users/mmmmm/Desktop/chicken/1.png", 
 			"C:/Users/mmmmm/Desktop/chicken/2.png",
 			"C:/Users/mmmmm/Desktop/chicken/3.png",
@@ -54,7 +48,6 @@ public class Commands extends ListenerAdapter {
 	
 	
 	public JoeFileCount joeFile = new JoeFileCount();
-	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		String[] args = event.getMessage().getContentRaw().split(" ");
@@ -75,26 +68,36 @@ public class Commands extends ListenerAdapter {
 			else if(isAdmin) {
 				event.getGuild().ban(event.getMessage().getMentionedMembers().get(0), 0, "banned").queue();
 			}
+			
+			try {
+			      FileWriter myWriter = new FileWriter(f);
+			      myWriter.write(event.getMessage().getMentionedMembers().toString() + " has been cleared\n");
+			      myWriter.close();
+			      System.out.println("Channel update log: SUCCESSFUL");
+			} catch (IOException e) {
+			    	System.out.println("Channel update log: FAILURE... File Not Found Exception");
+			      	e.printStackTrace();
+			}
 		}
 		if(args[0].equalsIgnoreCase(prefix + "helpme")) {
-			event.getMessage().getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("c$hi will greet you"
-					+ "\nc$die will love you :)"
-					+ "\nc$grease will annoy garret 5 times"
-					+ "\nc$suckmyballs tells a very stupid idiot to suck my balls"
-					+ "\nc$activity will do something hilarious"
-					+ "\nc$activityclear will reset my activity"
-					+ "\nc$cock will give you some of this cock"
-					+ "\nc$chicken will send a random piece of delicious chicken!"
-					+ "\nc$multichicken use at your own risk"
-					+ "\nc$chickengif will show you a random chicken gif"
-					+ "\nc$fuckyougeo will blow up geos pc!"
-					+ "\nc$soyanthony shows a picture of anthony"
-					+ "\ngoodnight goodnight :)"
-					+ "\nc$kys You should kill yourself... now"
-					+ "\ncomputer show me hell will show you hell, be sure to thank computer" 
-					+ "\n(ADMIN ONLY) c$gotohell {@userID} bans a user for one day"
-					+ "\n(ADMIN ONLY) c$silence {@userID} mutes a user indefinitely"
-					+ "\n(ADMIN ONLY) c$unsilence {@userID} unmutes user")).queue();
+			event.getMessage().getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("Command List:\n"
+					+ "c$hi - ChickenBot replies with Greetings \n"
+					+ "c$die - ChickenBot replies with Love you too {@userID}\n"
+					+ "c$lean - ChickenBot will send a video with an Asuka/Venom Lean Meme.\n"
+					+ "computer show me hell - Will send a gif of a skeleton burning in hell, be sure to thank computer afterwards!\n"
+					+ "c$activity - Listens to the senders screams as an activity.\n"
+					+ "c$cock - Sends a gif with a chicken.\n"
+					+ "c$chickengif - Sends a guy who is very excited to eat some chicken!\n"
+					+ "c$multichicken - Sends between 1-5 random pictures of fried chicken.\n"
+					+ "c$soy {@userID} - Pings the user with a soy bounce gif.\n"
+					+ "c$goodnight - A personal favorite :)\n"
+					+ "c$warn {@userID} - Sends a dm to the pinged user, warning them.\n"
+					+ "c$tuesday - Sends Out of Touch - Hall & Oates music video link\n"
+					+ "computer kill joe biden - Probably the most complex command, this one sends an image to your server, counts up by one, and checks if the number has reached a maximum.\n"
+					+ "Along with a bunch of stupid file shit.\n"
+					+ "c$reset - This increases the maximum by a random amount between 50-249.\n"
+					+ "c$play - Sets ChickenBot activity to playing a custom game of the senders choosing.\n"
+					+ "c$listen - Sets ChickenBot activity to listening to a custom song.")).queue();
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "silence")) {
@@ -153,6 +156,15 @@ public class Commands extends ListenerAdapter {
 		if(args[0].equalsIgnoreCase(prefix + "activityclear")) {
 			event.getMessage().reply("cleared").queue();
 			event.getJDA().getPresence().setActivity(Activity.playing("Los Pollos Hermanos"));
+			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("ChickenBot activity has been reset.");
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		if(args[0].equalsIgnoreCase(prefix + "cock")) {
 			File f = new File("C:/Users/mmmmm/Desktop/chicken/cock.gif");
@@ -241,6 +253,15 @@ public class Commands extends ListenerAdapter {
 			User user = event.getMessage().getMentionedUsers().get(0);
 			user.openPrivateChannel().queue(channel -> channel.sendMessage(message).queue());
 			event.getMessage().delete().queue();
+			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println(event.getMessage().getMentionedMembers().toString() + " has been warned.");
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		for(int i = 0; i < args.length; i++) {
@@ -302,7 +323,14 @@ public class Commands extends ListenerAdapter {
 			else if(joeCheck(joeCount) == maximumJoe) {
 				event.getChannel().sendMessage("Oops, Joe Biden is now perma dead!").queue();
 			}
-			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("Joe Biden death count raised to " + joeCount);
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		if(args[0].equalsIgnoreCase(prefix + "joekillcount")) {
 			String counter = String.valueOf(joeCount);
@@ -317,6 +345,7 @@ public class Commands extends ListenerAdapter {
 		
 		if(args[0].equalsIgnoreCase(prefix + "reset")) {
 			int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
+			int totalJoe = joeCount;
 			if(joeCount == maximumJoe) {
 				for(int i = 0; i < adminIDs.length; i++) {
 					if(event.getAuthor().getId().equals(adminIDs[i])) {
@@ -326,9 +355,18 @@ public class Commands extends ListenerAdapter {
 					}
 				}
 			} else if(joeCount < maximumJoe) {
-				maximumJoe += randCounter;
+				totalJoe += randCounter;
 				event.getChannel().sendMessage("\u26A0 Here they come...").queue();
 			}
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("Total Joe Biden count increased to " + totalJoe);
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		boolean isAdmin = false;
@@ -347,6 +385,15 @@ public class Commands extends ListenerAdapter {
 				event.getJDA().getPresence().setActivity(Activity.playing(activity));
 			}
 			event.getChannel().sendMessage("I am now playing " + activity).queue();	
+			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("ChickenBot activity changed to: playing " + event.getJDA().getPresence().getActivity().toString());
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "listen")) {
@@ -356,6 +403,15 @@ public class Commands extends ListenerAdapter {
 				event.getJDA().getPresence().setActivity(Activity.listening(activity));
 			}
 			event.getChannel().sendMessage("I am now listening to " + activity).queue();	
+			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("ChickenBot activity changed to: listening to " + event.getJDA().getPresence().getActivity().toString());
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		if(args[0].equalsIgnoreCase("!rule34")) {
 			event.getMessage().reply("Horny").queue();
@@ -374,6 +430,48 @@ public class Commands extends ListenerAdapter {
 					event.getChannel().sendMessage("You are not an admin, get fucked").queue();
 					break;
 				}
+			}
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println(event.getChannel().getName() + " has been cleared");
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(args[0].equalsIgnoreCase(prefix + "t88shutdownevent")) {
+			if(event.getAuthor().getId().equals("695688150466428989")) {
+				event.getChannel().sendMessage("ChickenBot is shutting down for maintenance... Will be back shortly").queue();
+				event.getJDA().shutdown();
+				try {
+					PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+					pw.println("ChickenBot shut down for maintenance");
+					pw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				event.getChannel().sendMessage("You cannot initiate shutdown sequence: t88shutdownevent.");
+			}
+			
+			
+		}
+		if(args[0].equalsIgnoreCase(prefix + "t99shutdownevent")) {
+			if(event.getAuthor().getId().equals("695688150466428989")) {
+				event.getChannel().sendMessage("ChickenBot is shutting down for unknown reasons... Will be back shortly").queue();
+				event.getJDA().shutdown();
+				try {
+					PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+					pw.println("ChickenBot shutdown for miscellaneous reasons");
+					pw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				event.getChannel().sendMessage("You cannot initiate shutdown sequence: t99shutdownevent.");
 			}
 		}
 	}
