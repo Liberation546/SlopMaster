@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
@@ -97,7 +98,8 @@ public class Commands extends ListenerAdapter {
 					+ "Along with a bunch of stupid file shit.\n"
 					+ "c$reset - This increases the maximum by a random amount between 50-249.\n"
 					+ "c$play - Sets ChickenBot activity to playing a custom game of the senders choosing.\n"
-					+ "c$listen - Sets ChickenBot activity to listening to a custom song.")).queue();
+					+ "c$listen - Sets ChickenBot activity to listening to a custom song."
+					+ "c$lonely - Sets ChickenBot status to Do Not Disturb")).queue();
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "silence")) {
@@ -473,6 +475,10 @@ public class Commands extends ListenerAdapter {
 			} else {
 				event.getChannel().sendMessage("You cannot initiate shutdown sequence: t99shutdownevent.");
 			}
+		}
+		if(args[0].equalsIgnoreCase(prefix + "lonely")) {
+			event.getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+			event.getChannel().sendMessage("Do not speak to me...").queue();
 		}
 	}
 	public int joeCheck(int joeCount) {

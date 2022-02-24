@@ -22,6 +22,7 @@ Along with a bunch of stupid file shit.
 c$reset - This increases the maximum by a random amount between 50-249.
 c$play - Sets ChickenBot activity to playing a custom game of the senders choosing.
 c$listen - Sets ChickenBot activity to listening to a custom song.
+c$lonely - Sets ChickenBot status to Do Not Disturb
 
 And those are all the commands you should be able to use! A lot of the files are hosted from my pc, so if my pc is shut off or if my wifi goes out,
 then chances are some of the image commands won't work.
