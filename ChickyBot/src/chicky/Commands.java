@@ -1,7 +1,10 @@
 package chicky;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,11 +17,15 @@ import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.RestAction;
 
 
 
 public class Commands extends ListenerAdapter {
+	public String message = "";
 	public String prefix = "c$";
+	public int joeCount = 0;
+	public int maximumJoe = 100;
 	public String[] pathArray = {"C:/Users/mmmmm/Desktop/chicken/1.png", 
 			"C:/Users/mmmmm/Desktop/chicken/2.png",
 			"C:/Users/mmmmm/Desktop/chicken/3.png",
@@ -40,6 +47,8 @@ public class Commands extends ListenerAdapter {
 	
 	public String[] adminIDs = {"695688150466428989", "530269428185825290", "508100678758170644", "267030980210982923", "939905297240178769", "256920677385371649", "944587799888285737", "936468736532172800"};
 	
+	
+	public JoeFileCount joeFile = new JoeFileCount();
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		String[] args = event.getMessage().getContentRaw().split(" ");
@@ -219,39 +228,19 @@ public class Commands extends ListenerAdapter {
 			event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/kys.png")).queue();
 		}
 		if(args[0].equalsIgnoreCase(prefix + "warn")) {
+			for(int i = 0; i < args.length; i++) {
+				message += args[i] += " ";
+			}
+			
 			User user = event.getMessage().getMentionedUsers().get(0);
-			user.openPrivateChannel().queue(channel -> channel.sendMessage(" ").queue());
+			user.openPrivateChannel().queue(channel -> channel.sendMessage(message).queue());
 			event.getMessage().delete().queue();
-		}
-		if(args[0].equalsIgnoreCase(prefix + "killgrease")) {
-			User invUser = event.getAuthor();
-			boolean isValid = true;
-			if(invUser.getId().equals("285179041777188875")) {
-				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/kys.png")).queue();
-				isValid = false;
-			}
-			else if(isValid) {
-				event.getMessage().delete().queue();
-				Member member = event.getGuild().getMemberById("285179041777188875");
-				User user = member.getUser();
-				for(int i = 0; i < 15; i++) {
-					user.openPrivateChannel().queue(channel -> channel.sendMessage("FUCK YOU FUCK YOU FUCK YOU").queue());
-				}
-			}
 		}
 		
 		for(int i = 0; i < args.length; i++) {
 			if(args[i].equalsIgnoreCase("jango")) {
 				i = args.length;
 				final String emoteId = "felixsupremacy:944033771836022844";
-				event.getMessage().addReaction(emoteId).queue();
-			}
-		}
-		
-		for(int i = 0; i < args.length; i++) {
-			if(args[i].equalsIgnoreCase("gort") || args[i].equalsIgnoreCase("snoy")) {
-				i = args.length;
-				final String emoteId = "snoy:944401062234816542";
 				event.getMessage().addReaction(emoteId).queue();
 			}
 		}
@@ -266,25 +255,127 @@ public class Commands extends ListenerAdapter {
 		for(int i = 0; i < args.length; i++) {
 			if(args[0].equalsIgnoreCase("league") && args[1].equalsIgnoreCase("of") && args[2].equalsIgnoreCase("legends")) {
 				i = args.length;
-				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
+				event.getMessage().reply(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
+				//event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
 			}
 		}
-		boolean isAdmin = false;
-		for(int i = 0; i < args.length; i++) {
-			if(args[i].equals("genshin")) {
-				for(int j = 0; j < adminIDs.length; j++) {
-					if(event.getAuthor().getId().equals(adminIDs[j])) {
-						isAdmin = true;
+		
+		if(args[0].equalsIgnoreCase("computer") && args[1].equalsIgnoreCase("kill") && args[2].equalsIgnoreCase("joe") && args[3].equalsIgnoreCase("biden")) {
+			String counter = String.valueOf(joeCount);
+			joeCount++;
+			try {
+				joeFile.writeFile(joeCount);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				counter = joeFile.readFile(joeFile.joe);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(joeCount <= 10 && joeCount > 1) {
+				event.getChannel().sendTyping().delay(Duration.ofSeconds(5)).queue();
+				event.getChannel().sendMessage("I have killed Joe Biden, here is the video.").queue();
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/biden.gif")).queue();
+				event.getChannel().sendMessage("Joe Biden has been killed " + counter + " times.").queue();
+			} else if (joeCount == 1) {
+				event.getChannel().sendTyping().delay(Duration.ofSeconds(5)).queue();
+				event.getChannel().sendMessage("I have killed Joe Biden, here is the video.").queue();
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/biden.gif")).queue();
+				event.getChannel().sendMessage("Joe Biden has been killed " + counter + " time.").queue();
+			}
+			
+			else if(joeCheck(joeCount) == maximumJoe) {
+				event.getChannel().sendMessage("Oops, Joe Biden is now perma dead!").queue();
+			}
+			
+		}
+		if(args[0].equalsIgnoreCase(prefix + "joecount")) {
+			String counter = String.valueOf(joeCount);
+			try {
+				counter = joeFile.readFile(joeFile.joe);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			event.getChannel().sendMessage(counter).queue();
+		}
+		
+		if(args[0].equalsIgnoreCase(prefix + "reset")) {
+			int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
+			if(joeCount == maximumJoe) {
+				for(int i = 0; i < adminIDs.length; i++) {
+					if(event.getAuthor().getId().equals(adminIDs[i])) {
+						event.getChannel().sendMessage("They respawned!!!!").queue();
+						joeCount = 0;
+						i = adminIDs.length;
 					}
 				}
-				if(!isAdmin) {
-					event.getChannel().sendMessage("MUTED AHAHAHAHAHAHA").queue();
-					event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("932112631546916884")).queue();
-				} else {
+			} else if(joeCount < maximumJoe) {
+				maximumJoe += randCounter;
+				event.getChannel().sendMessage("\u26A0 Here they come...").queue();
+			}
+		}
+		
+		boolean isAdmin = false;
+		for(int i = 0; i < args.length; i++) {
+			User user = event.getMember().getUser();
+			if(args[i].equalsIgnoreCase("genshin")) {
+				user.openPrivateChannel().queue(channel -> channel.sendMessage("Haha idior").queue());
+				event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("932112631546916884")).queue();
+			}
+		}
+		
+		if(args[0].equalsIgnoreCase(prefix + "play")) {
+			String activity = "";
+			for(int i = 1; i < args.length; i++) {
+				activity += args[i] += " ";
+				event.getJDA().getPresence().setActivity(Activity.playing(activity));
+			}
+			event.getChannel().sendMessage("I am now playing " + activity).queue();	
+		}
+		
+		if(args[0].equalsIgnoreCase(prefix + "listen")) {
+			String activity = "";
+			for(int i = 1; i < args.length; i++) {
+				activity += args[i] += " ";
+				event.getJDA().getPresence().setActivity(Activity.listening(activity));
+			}
+			event.getChannel().sendMessage("I am now listening to " + activity).queue();	
+		}
+		
+		if(args[0].equalsIgnoreCase("!rule34")) {
+			event.getMessage().reply("Horny").queue();
+		}
+		if(args[0].equalsIgnoreCase(prefix + "nuke")) {
+			boolean isPosAdmin = false;
+			for(int i = 0; i < adminIDs.length; i++) {
+				if(event.getAuthor().getId().equals(adminIDs[i])) {
+					isPosAdmin = true;
+					event.getMessage().delete().queue();
+					event.getChannel().sendMessage("This channel will be cleared in 10 seconds").queue();
+					event.getChannel().createCopy().queue();
+		            event.getChannel().delete().queueAfter(10, TimeUnit.SECONDS);
+		            break;
+				} else if(!isPosAdmin) {
+					event.getChannel().sendMessage("You are not an admin, get fucked").queue();
 					break;
 				}
 			}
 		}
+	}
+	public int joeCheck(int joeCount) {
+		if(joeCount >= 10) {
+			try {
+				joeFile.writeFile(joeCount - joeCount);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return joeCount;
 	}
 }
 
