@@ -1,7 +1,6 @@
 package chicky;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,33 +51,35 @@ public class Commands extends ListenerAdapter {
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		String[] args = event.getMessage().getContentRaw().split(" ");
-		
-		if(args[0].equalsIgnoreCase(prefix + "gotohell")) {
-			//User author = event.getAuthor();
-			boolean isAdmin = true;
-			if(!event.getGuild().getMember(event.getAuthor()).hasPermission(net.dv8tion.jda.api.Permission.ADMINISTRATOR)) {
-				event.getChannel().sendMessage("You are not an administrator").queue();
-				isAdmin = false;
-			}
-			if(args.length == 1 && isAdmin) {
-				event.getChannel().sendMessage("Invalid command syntax");
-			}
-			else if(event.getMessage().getMentionedMembers().isEmpty() && isAdmin) {
-				event.getGuild().ban(args[1], 0, "Banned").queue();
-			} 
-			else if(isAdmin) {
-				event.getGuild().ban(event.getMessage().getMentionedMembers().get(0), 0, "banned").queue();
-			}
+		try {
+			if(args[0].equalsIgnoreCase(prefix + "gotohell")) {
+				boolean isAdmin = true;
+				if(!event.getGuild().getMember(event.getAuthor()).hasPermission(net.dv8tion.jda.api.Permission.ADMINISTRATOR)) {
+					event.getChannel().sendMessage("You are not an administrator").queue();
+					isAdmin = false;
+				}
+				if(args.length == 1 && isAdmin) {
+					event.getChannel().sendMessage("Invalid command syntax");
+				}
+				else if(event.getMessage().getMentionedMembers().isEmpty() && isAdmin) {
+					event.getGuild().ban(args[1], 0, "Banned").queue();
+				} 
+				else if(isAdmin) {
+					event.getGuild().ban(event.getMessage().getMentionedMembers().get(0), 0, "banned").queue();
+				}
 			
-			try {
-			      FileWriter myWriter = new FileWriter(f);
-			      myWriter.write(event.getMessage().getMentionedMembers().toString() + " has been cleared\n");
-			      myWriter.close();
-			      System.out.println("Channel update log: SUCCESSFUL");
-			} catch (IOException e) {
-			    	System.out.println("Channel update log: FAILURE... File Not Found Exception");
-			      	e.printStackTrace();
+				try {
+					FileWriter myWriter = new FileWriter(f);
+					myWriter.write(event.getMessage().getMentionedMembers().toString() + " has been cleared\n");
+					myWriter.close();
+					System.out.println("Channel update log: SUCCESSFUL");
+				} catch (IOException e) {
+			    		System.out.println("Channel update log: FAILURE... File Not Found Exception");
+			    		e.printStackTrace();
+				}
 			}
+		} catch(Exception nullUser) {
+			event.getChannel().sendMessage("User not found").queue();
 		}
 		if(args[0].equalsIgnoreCase(prefix + "helpme")) {
 			event.getMessage().getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("Command List:\n"
@@ -105,14 +106,18 @@ public class Commands extends ListenerAdapter {
 		if(args[0].equalsIgnoreCase(prefix + "silence")) {
 			Member member = event.getMessage().getMentionedMembers().get(0);
 			User author = event.getMessage().getAuthor();
-			boolean isAdmin = true;
-			if(!event.getGuild().getMember(author).hasPermission(net.dv8tion.jda.api.Permission.ADMINISTRATOR)) {
-				event.getChannel().sendMessage("You are not an administrator idiot!");
-				isAdmin = false;
-			} 
-			if(isAdmin) {
-				event.getGuild().addRoleToMember(member, event.getGuild().getRoleById("932112631546916884")).queue();
-				event.getChannel().sendMessage(member.getAsMention() + " Has been muted :)").queue();
+			try {
+				boolean isAdmin = true;
+				if(!event.getGuild().getMember(author).hasPermission(net.dv8tion.jda.api.Permission.ADMINISTRATOR)) {
+					event.getChannel().sendMessage("You are not an administrator idiot!");
+					isAdmin = false;
+				} 
+				if(isAdmin) {
+					event.getGuild().addRoleToMember(member, event.getGuild().getRoleById("932112631546916884")).queue();
+					event.getChannel().sendMessage(member.getAsMention() + " Has been muted :)").queue();
+				}
+			} catch(Exception e) {
+					event.getChannel().sendMessage("User is null").queue();
 			}
 		}
 		if(args[0].equalsIgnoreCase(prefix + "hi")) {
@@ -164,7 +169,6 @@ public class Commands extends ListenerAdapter {
 				pw.println("ChickenBot activity has been reset.");
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -219,7 +223,6 @@ public class Commands extends ListenerAdapter {
 			}
 		}
 		if(args[0].equalsIgnoreCase(prefix + "soy")) {
-			User user = event.getAuthor();
 			IMentionable mentionedUser =  event.getMessage().getMentions(MentionType.USER).get(0);
 			String replace = mentionedUser.toString();
 			long id = Long.parseLong(replace.replaceAll("[^0-9]", ""));
@@ -261,7 +264,6 @@ public class Commands extends ListenerAdapter {
 				pw.println(event.getMessage().getMentionedMembers().toString() + " has been warned.");
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -301,7 +303,6 @@ public class Commands extends ListenerAdapter {
 			try {
 				joeFile.writeFile(joeCount);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
@@ -330,7 +331,6 @@ public class Commands extends ListenerAdapter {
 				pw.println("Joe Biden death count raised to " + joeCount);
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -339,7 +339,6 @@ public class Commands extends ListenerAdapter {
 			try {
 				counter = joeFile.readFile(joeFile.joe);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			event.getChannel().sendMessage(counter).queue();
@@ -365,18 +364,24 @@ public class Commands extends ListenerAdapter {
 				pw.println("Total Joe Biden count increased to " + totalJoe);
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}
 		
-		boolean isAdmin = false;
 		for(int i = 0; i < args.length; i++) {
 			User user = event.getMember().getUser();
 			if(args[i].equalsIgnoreCase("genshin")) {
 				user.openPrivateChannel().queue(channel -> channel.sendMessage("Haha idior").queue());
 				event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("932112631546916884")).queue();
+			}
+			
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println(event.getAuthor().toString() + " has been muted for talking about genshin impact");
+				pw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -393,7 +398,6 @@ public class Commands extends ListenerAdapter {
 				pw.println("ChickenBot activity changed to: playing " + event.getJDA().getPresence().getActivity().toString());
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -411,7 +415,6 @@ public class Commands extends ListenerAdapter {
 				pw.println("ChickenBot activity changed to: listening to " + event.getJDA().getPresence().getActivity().toString());
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -438,7 +441,6 @@ public class Commands extends ListenerAdapter {
 				pw.println(event.getChannel().getName() + " has been cleared");
 				pw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -451,7 +453,6 @@ public class Commands extends ListenerAdapter {
 					pw.println("ChickenBot shut down for maintenance");
 					pw.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -469,7 +470,6 @@ public class Commands extends ListenerAdapter {
 					pw.println("ChickenBot shutdown for miscellaneous reasons");
 					pw.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -480,13 +480,31 @@ public class Commands extends ListenerAdapter {
 			event.getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
 			event.getChannel().sendMessage("Do not speak to me...").queue();
 		}
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("wales")) {
+				i = args.length;
+				event.getChannel().sendMessage("Llanfairpwllgwyngyllgogerychrywndrobwllllantysiliogogogoch").queue();
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("trump")) {
+				i = args.length;
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/trump.png")).queue();
+			}
+		}
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("jp")) {
+				i = args.length;
+				event.getMessage().addReaction("trand:946483227231649823").queue();
+			}
+		}
 	}
 	public int joeCheck(int joeCount) {
 		if(joeCount >= 10) {
 			try {
 				joeFile.writeFile(joeCount - joeCount);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
