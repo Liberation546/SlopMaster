@@ -369,6 +369,7 @@ public class Commands extends ListenerAdapter {
 			
 		}
 		
+		/*
 		for(int i = 0; i < args.length; i++) {
 			User user = event.getMember().getUser();
 			if(args[i].equalsIgnoreCase("genshin")) {
@@ -384,6 +385,7 @@ public class Commands extends ListenerAdapter {
 				e.printStackTrace();
 			}
 		}
+		*/
 		
 		if(args[0].equalsIgnoreCase(prefix + "play")) {
 			String activity = "";
@@ -497,6 +499,13 @@ public class Commands extends ListenerAdapter {
 			if(args[i].equalsIgnoreCase("jp")) {
 				i = args.length;
 				event.getMessage().addReaction("trand:946483227231649823").queue();
+			}
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("destiny")) {
+				i = args.length;
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/out.gif")).queue();
 			}
 		}
 	}
