@@ -3,6 +3,9 @@ package chicky;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -13,6 +16,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -49,6 +54,7 @@ public class Commands extends ListenerAdapter {
 	
 	
 	public JoeFileCount joeFile = new JoeFileCount();
+	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		String[] args = event.getMessage().getContentRaw().split(" ");
@@ -244,6 +250,13 @@ public class Commands extends ListenerAdapter {
 				event.getMessage().addReaction(emoteId).queue();
 			}
 		}
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("benadryl")) {
+				i = args.length;
+				final String emoteId = "BENADRYL:943635931456495696";
+				event.getMessage().addReaction(emoteId).queue();
+			}
+		}
 		
 		for(int i = 0; i < args.length; i++) {
 			if(args[i].equalsIgnoreCase("tuesday")) {
@@ -256,7 +269,6 @@ public class Commands extends ListenerAdapter {
 			if(args[0].equalsIgnoreCase("league") && args[1].equalsIgnoreCase("of") && args[2].equalsIgnoreCase("legends")) {
 				i = args.length;
 				event.getMessage().reply(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
-				//event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/outofthegenepool.png")).queue();
 			}
 		}
 		
@@ -292,7 +304,7 @@ public class Commands extends ListenerAdapter {
 			}
 			
 		}
-		if(args[0].equalsIgnoreCase(prefix + "joecount")) {
+		if(args[0].equalsIgnoreCase(prefix + "joekillcount")) {
 			String counter = String.valueOf(joeCount);
 			try {
 				counter = joeFile.readFile(joeFile.joe);
@@ -345,7 +357,6 @@ public class Commands extends ListenerAdapter {
 			}
 			event.getChannel().sendMessage("I am now listening to " + activity).queue();	
 		}
-		
 		if(args[0].equalsIgnoreCase("!rule34")) {
 			event.getMessage().reply("Horny").queue();
 		}
