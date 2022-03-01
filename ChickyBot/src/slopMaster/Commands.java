@@ -21,11 +21,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class Commands extends ListenerAdapter {
 	public String message = "";
-	public String prefix = "c$";
+	public String prefix = "s$";
 	public int joeCount = 0;
 	public int maximumJoe = 100;
 	public File f = new File("log.txt");
-	int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
+	public int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
+	public int sloppy = 0;
 	public String[] pathArray = {"C:/Users/mmmmm/Desktop/chicken/1.png", 
 			"C:/Users/mmmmm/Desktop/chicken/2.png",
 			"C:/Users/mmmmm/Desktop/chicken/3.png",
@@ -84,24 +85,24 @@ public class Commands extends ListenerAdapter {
 		}
 		if(args[0].equalsIgnoreCase(prefix + "helpme")) {
 			event.getMessage().getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("Command List:\n"
-					+ "c$hi - ChickenBot replies with Greetings \n"
-					+ "c$die - ChickenBot replies with Love you too {@userID}\n"
-					+ "c$lean - ChickenBot will send a video with an Asuka/Venom Lean Meme.\n"
+					+ "s$hi - ChickenBot replies with Greetings \n"
+					+ "s$die - ChickenBot replies with Love you too {@userID}\n"
+					+ "s$lean - ChickenBot will send a video with an Asuka/Venom Lean Meme.\n"
 					+ "computer show me hell - Will send a gif of a skeleton burning in hell, be sure to thank computer afterwards!\n"
-					+ "c$activity - Listens to the senders screams as an activity.\n"
-					+ "c$cock - Sends a gif with a chicken.\n"
-					+ "c$chickengif - Sends a guy who is very excited to eat some chicken!\n"
-					+ "c$multichicken - Sends between 1-5 random pictures of fried chicken.\n"
-					+ "c$soy {@userID} - Pings the user with a soy bounce gif.\n"
-					+ "c$goodnight - A personal favorite :)\n"
-					+ "c$warn {@userID} - Sends a dm to the pinged user, warning them.\n"
-					+ "c$tuesday - Sends Out of Touch - Hall & Oates music video link\n"
+					+ "s$activity - Listens to the senders screams as an activity.\n"
+					+ "s$cock - Sends a gif with a chicken.\n"
+					+ "s$chickengif - Sends a guy who is very excited to eat some chicken!\n"
+					+ "s$multichicken - Sends between 1-5 random pictures of fried chicken.\n"
+					+ "s$soy {@userID} - Pings the user with a soy bounce gif.\n"
+					+ "s$goodnight - A personal favorite :)\n"
+					+ "s$warn {@userID} - Sends a dm to the pinged user, warning them.\n"
+					+ "s$tuesday - Sends Out of Touch - Hall & Oates music video link\n"
 					+ "computer kill joe biden - Probably the most complex command, this one sends an image to your server, counts up by one, and checks if the number has reached a maximum.\n"
 					+ "Along with a bunch of stupid file shit.\n"
-					+ "c$reset - This increases the maximum by a random amount between 50-249.\n"
-					+ "c$play - Sets ChickenBot activity to playing a custom game of the senders choosing.\n"
-					+ "c$listen - Sets ChickenBot activity to listening to a custom song."
-					+ "c$lonely - Sets ChickenBot status to Do Not Disturb")).queue();
+					+ "s$reset - This increases the maximum by a random amount between 50-249.\n"
+					+ "s$play - Sets ChickenBot activity to playing a custom game of the senders choosing.\n"
+					+ "s$listen - Sets ChickenBot activity to listening to a custom song."
+					+ "s$lonely - Sets ChickenBot status to Do Not Disturb")).queue();
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "silence")) {
@@ -528,6 +529,36 @@ public class Commands extends ListenerAdapter {
 			event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/nfw.gif")).queue();
 		} else if((!event.getChannel().isNSFW()) && args[0].equalsIgnoreCase("horny")) {
 			event.getChannel().sendMessage("You cannot be horny here").queue();
+		}
+		
+		if(args[0].equalsIgnoreCase("slop") && args[1].equalsIgnoreCase("me")) {
+			sloppy++;
+			if(sloppy == 1) {
+				event.getMessage().reply("You have been slopped " + sloppy + " time.").queue();
+			} else if(sloppy > 1) {
+				event.getMessage().reply("You have been slopped " + sloppy + " times.").queue();
+			}
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println(event.getAuthor().getAsTag() + " has been slopped");
+				pw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if(args[0].equalsIgnoreCase("unslop") && args[1].equalsIgnoreCase("me")) {
+			event.getChannel().sendMessage("no more slop!").queue();
+			sloppy = 0;
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
+				pw.println("slop reset");
+				pw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if(args[0].equalsIgnoreCase(prefix + "incarcerate")) {
+			event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/prison.jpg")).queue();
 		}
 	}
 	public int joeCheck(int joeCount) {

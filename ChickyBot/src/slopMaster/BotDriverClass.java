@@ -17,7 +17,7 @@ public class BotDriverClass {
 		Token token = new Token();
 		JoeFileCount file = new JoeFileCount();
 		JDABuilder jda = JDABuilder.createDefault(token.Token);
-		jda.setActivity(Activity.playing("Los Pollos Hermanos"));
+		jda.setActivity(Activity.playing("slopping innocent people (i hate them)"));
 		jda.setStatus(OnlineStatus.ONLINE);
 		jda.addEventListeners(new Commands());
 		jda.build();
