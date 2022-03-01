@@ -1,4 +1,4 @@
-package chicky;
+package slopMaster;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,6 +25,7 @@ public class Commands extends ListenerAdapter {
 	public int joeCount = 0;
 	public int maximumJoe = 100;
 	public File f = new File("log.txt");
+	int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
 	public String[] pathArray = {"C:/Users/mmmmm/Desktop/chicken/1.png", 
 			"C:/Users/mmmmm/Desktop/chicken/2.png",
 			"C:/Users/mmmmm/Desktop/chicken/3.png",
@@ -345,7 +346,7 @@ public class Commands extends ListenerAdapter {
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "reset")) {
-			int randCounter = ThreadLocalRandom.current().nextInt(50, 250);
+			
 			int totalJoe = joeCount;
 			if(joeCount == maximumJoe) {
 				for(int i = 0; i < adminIDs.length; i++) {
@@ -532,7 +533,7 @@ public class Commands extends ListenerAdapter {
 	public int joeCheck(int joeCount) {
 		if(joeCount >= 10) {
 			try {
-				joeFile.writeFile(joeCount - joeCount);
+				joeFile.writeFile(joeCount + randCounter);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

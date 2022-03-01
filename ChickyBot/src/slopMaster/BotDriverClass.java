@@ -1,4 +1,4 @@
-package chicky;
+package slopMaster;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,6 @@ public class BotDriverClass {
 	public static void main(String[] args) throws LoginException, IOException {
 		Token token = new Token();
 		JoeFileCount file = new JoeFileCount();
-		//file.writeFile(10000);
 		JDABuilder jda = JDABuilder.createDefault(token.Token);
 		jda.setActivity(Activity.playing("Los Pollos Hermanos"));
 		jda.setStatus(OnlineStatus.ONLINE);
