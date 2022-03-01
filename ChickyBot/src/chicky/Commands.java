@@ -446,9 +446,9 @@ public class Commands extends ListenerAdapter {
 				e.printStackTrace();
 			}
 		}
-		if(args[0].equalsIgnoreCase(prefix + "t88shutdownevent")) {
+		if(args[0].equalsIgnoreCase(prefix + "killyourself")) {
 			if(event.getAuthor().getId().equals("695688150466428989")) {
-				event.getChannel().sendMessage("ChickenBot is shutting down for maintenance... Will be back shortly").queue();
+				event.getChannel().sendMessage("Ok :( goodbye").queue();
 				event.getJDA().shutdown();
 				try {
 					PrintWriter pw = new PrintWriter(new FileWriter(f, true));
@@ -463,9 +463,9 @@ public class Commands extends ListenerAdapter {
 			
 			
 		}
-		if(args[0].equalsIgnoreCase(prefix + "t99shutdownevent")) {
+		if(args[0].equalsIgnoreCase(prefix + "die")) {
 			if(event.getAuthor().getId().equals("695688150466428989")) {
-				event.getChannel().sendMessage("ChickenBot is shutting down for unknown reasons... Will be back shortly").queue();
+				event.getChannel().sendMessage("i will be back cunt").queue();
 				event.getJDA().shutdown();
 				try {
 					PrintWriter pw = new PrintWriter(new FileWriter(f, true));
@@ -503,10 +503,30 @@ public class Commands extends ListenerAdapter {
 		}
 		
 		for(int i = 0; i < args.length; i++) {
-			if(args[i].equalsIgnoreCase("destiny")) {
+			if(args[i].equalsIgnoreCase("destiny")) { 
 				i = args.length;
-				event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/out.gif")).queue();
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/out.gif")).queue();			
+			} else if(args[i].equalsIgnoreCase("hate") && args[i + 1].equalsIgnoreCase("destiny")) {
+				i = args.length;
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/basedchad.gif")).queue();
 			}
+		}
+		
+		if(args[0].equalsIgnoreCase("computer") && args[1].equalsIgnoreCase("show") && args[2].equalsIgnoreCase("me") && args[3].equalsIgnoreCase("shit")) {
+			event.getChannel().sendTyping().queue();
+			event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/shitgame.png")).queue();
+		}
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].equalsIgnoreCase("walt")) {
+				event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/walt.png")).queue();
+			}
+		}
+		
+		if(event.getChannel().isNSFW() && args[0].equalsIgnoreCase("horny")) {
+			event.getChannel().sendFile(new File("C:/Users/mmmmm/desktop/botgifs/nfw.gif")).queue();
+		} else if((!event.getChannel().isNSFW()) && args[0].equalsIgnoreCase("horny")) {
+			event.getChannel().sendMessage("You cannot be horny here").queue();
 		}
 	}
 	public int joeCheck(int joeCount) {
