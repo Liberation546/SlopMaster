@@ -85,9 +85,9 @@ public class Commands extends ListenerAdapter {
 		}
 		if(args[0].equalsIgnoreCase(prefix + "helpme")) {
 			event.getMessage().getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("Command List:\n"
-					+ "s$hi - ChickenBot replies with Greetings \n"
-					+ "s$die - ChickenBot replies with Love you too {@userID}\n"
-					+ "s$lean - ChickenBot will send a video with an Asuka/Venom Lean Meme.\n"
+					+ "s$hi - Slop Master replies with Greetings \n"
+					+ "s$die - Slop Master replies with Love you too {@userID}\n"
+					+ "s$lean - Slop Master will send a video with an Asuka/Venom Lean Meme.\n"
 					+ "computer show me hell - Will send a gif of a skeleton burning in hell, be sure to thank computer afterwards!\n"
 					+ "s$activity - Listens to the senders screams as an activity.\n"
 					+ "s$cock - Sends a gif with a chicken.\n"
@@ -100,9 +100,9 @@ public class Commands extends ListenerAdapter {
 					+ "computer kill joe biden - Probably the most complex command, this one sends an image to your server, counts up by one, and checks if the number has reached a maximum.\n"
 					+ "Along with a bunch of stupid file shit.\n"
 					+ "s$reset - This increases the maximum by a random amount between 50-249.\n"
-					+ "s$play - Sets ChickenBot activity to playing a custom game of the senders choosing.\n"
-					+ "s$listen - Sets ChickenBot activity to listening to a custom song."
-					+ "s$lonely - Sets ChickenBot status to Do Not Disturb")).queue();
+					+ "s$play - Sets Slop Master's activity to playing a custom game of the senders choosing.\n"
+					+ "s$listen - Sets Slop Master's activity to listening to a custom song."
+					+ "s$lonely - Sets Slop Master's status to Do Not Disturb")).queue();
 		}
 		
 		if(args[0].equalsIgnoreCase(prefix + "silence")) {
@@ -547,8 +547,12 @@ public class Commands extends ListenerAdapter {
 			}
 		}
 		if(args[0].equalsIgnoreCase("unslop") && args[1].equalsIgnoreCase("me")) {
-			event.getChannel().sendMessage("no more slop!").queue();
-			sloppy = 0;
+			if(sloppy == 0) {
+				event.getChannel().sendMessage("there is no slop to unslop!").queue();
+			} else {
+				event.getChannel().sendMessage("no more slop!").queue();
+				sloppy = 0;
+			}
 			try {
 				PrintWriter pw = new PrintWriter(new FileWriter(f, true));
 				pw.println("slop reset");
@@ -559,6 +563,15 @@ public class Commands extends ListenerAdapter {
 		}
 		if(args[0].equalsIgnoreCase(prefix + "incarcerate")) {
 			event.getChannel().sendFile(new File("C:/Users/mmmmm/Desktop/botgifs/prison.jpg")).queue();
+		}
+		if(args[0].equalsIgnoreCase("slop")) {
+			IMentionable mentionedUser =  event.getMessage().getMentions(MentionType.USER).get(0);
+			String replace = mentionedUser.toString();
+			long id = Long.parseLong(replace.replaceAll("[^0-9]", ""));
+			event.getChannel().sendMessage("<@" + String.valueOf(id) + "> has been slopped.").queue();
+		}
+		if(event.getAuthor().getId().equals("600705350223659024")) {
+			event.getMessage().reply("<@600705350223659024> has been banned :)").queue();
 		}
 	}
 	public int joeCheck(int joeCount) {
